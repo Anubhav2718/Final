@@ -1,0 +1,14 @@
+{
+ "argv": [
+  "C:\\Users\\swanu\\anaconda3\\python.exe",
+  "-m",
+  "ipykernel_launcher",
+  "-f",
+  "{connection_file}"
+ ],
+ "display_name": "Python (kenv)",
+ "language": "python",
+ "metadata": {
+  "debugger": true
+ }
+}
