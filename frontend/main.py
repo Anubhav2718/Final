@@ -20,7 +20,7 @@ st.markdown("Ask me about General & Subsidiary Rules or Accident Manual.")
 query = st.text_input("Enter your question:")
 
 # Set your deployed FastAPI backend URL
-BACKEND_URL = "https://final-1-2t45.onrender.com/ask"
+BACKEND_URL = "https://final-or88.onrender.com"
 
 # Send query to FastAPI backend
 if st.button("Ask") and query:
