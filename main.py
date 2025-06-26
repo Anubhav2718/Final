@@ -145,16 +145,19 @@ async def ask_query(query: Query):
     try:
         result = agent_executor.invoke({"input": query.input, "chat_history": []})
 
-        final_answer = result.get("output", "")
-
+        # Safely extract final answer
+        final_answer = result.get("output", "No answer could be generated.")
+        
         # Safely handle intermediate steps
-        intermediate_steps = result.get("intermediate_steps", [])
-        action = ""
-        observation = ""
-
-        if intermediate_steps and len(intermediate_steps[0]) == 2:
-            action = intermediate_steps[0][0].tool
-            observation = intermediate_steps[0][1]
+        action = "Unknown tool"
+        observation = "No observation available"
+        
+        if result.get("intermediate_steps"):
+            try:
+                action = result["intermediate_steps"][0][0].tool
+                observation = result["intermediate_steps"][0][1]
+            except (IndexError, AttributeError):
+                pass
 
         return {
             "final_answer": final_answer,
@@ -163,7 +166,9 @@ async def ask_query(query: Query):
         }
 
     except Exception as e:
-        import traceback
-        traceback.print_exc()  # helpful for backend logs
-        return {"error": str(e)}
-
+        return {
+            "error": str(e),
+            "final_answer": f"Error processing your query: {str(e)}",
+            "action": "Error",
+            "observation": str(e)
+        }
