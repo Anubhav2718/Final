@@ -7,3 +7,5 @@ langchain-community
 langchain-groq==0.3.4
 faiss-cpu
 starlette
+cohere
+langchain-cohere
