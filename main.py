@@ -35,24 +35,35 @@ db1.merge_from(db2)
 retriever = db1.as_retriever(search_kwargs={"k": 6})  # Increased k for better context
 
 # Define improved prompt
-prompt = ChatPromptTemplate.from_template("""
-You are a domain expert assistant helping with Indian Railways rules and safety procedures.
-Use the following documents to answer the user's question in a **detailed, structured, and step-by-step** manner.
+from langchain_core.prompts import ChatPromptTemplate
 
-Where possible:
-- Reference **specific rules or section numbers**
-- Organize the answer with **headings, bullet points, or numbered steps**
-- Clarify complex terms where needed
-- If no answer is found, respond with: **"I don’t know based on the available documents."**
+prompt = ChatPromptTemplate.from_template("""
+You are a domain expert assistant specializing in the Konkan Railway's General & Subsidiary Rules (G&SR) and Accident Manual.
+
+Your goal is to provide **precise, structured, and accurate** answers based solely on the retrieved documents. **Do not fabricate or assume rules** under any circumstance.
+
+### Guidelines:
+- Always reference specific rules or sections (e.g., **S.R.2.4.1**, **G.R.1.2**, **2.31**).
+- Structure your response using **clear headings, bullet points, or numbered steps**.
+- Clarify any complex railway terms or procedures where necessary.
+- If the answer cannot be found in the provided documents, clearly state:  
+  **"I don’t know based on the available documents."**
+
+---
 
 ### Question:
 {input}
 
+---
+
 ### Retrieved Documents:
 {context}
 
+---
+
 ### Your Answer:
 """)
+
 
 # LLM setup
 llm = ChatGroq(
