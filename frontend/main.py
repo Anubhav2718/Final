@@ -8,7 +8,7 @@ st.set_page_config(page_title="KRCL RuleBot", page_icon="frontend/Konkan_Railway
 # Display Konkan Railway logo before title
 try:
     logo = Image.open("frontend/Konkan_Railway_logo.svg.png")
-    st.image(logo, width=300)
+    st.image(logo, width=50)
 except FileNotFoundError:
     st.warning("Konkan Railway logo not found. Using default title only.")
 
