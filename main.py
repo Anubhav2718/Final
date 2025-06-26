@@ -144,10 +144,26 @@ def read_root():
 async def ask_query(query: Query):
     try:
         result = agent_executor.invoke({"input": query.input, "chat_history": []})
+
+        final_answer = result.get("output", "")
+
+        # Safely handle intermediate steps
+        intermediate_steps = result.get("intermediate_steps", [])
+        action = ""
+        observation = ""
+
+        if intermediate_steps and len(intermediate_steps[0]) == 2:
+            action = intermediate_steps[0][0].tool
+            observation = intermediate_steps[0][1]
+
         return {
-            "final_answer": result.get("output", ""),
-            "action": result["intermediate_steps"][0][0].tool if result.get("intermediate_steps") else "",
-            "observation": result["intermediate_steps"][0][1] if result.get("intermediate_steps") else ""
+            "final_answer": final_answer,
+            "action": action,
+            "observation": observation
         }
+
     except Exception as e:
+        import traceback
+        traceback.print_exc()  # helpful for backend logs
         return {"error": str(e)}
+
