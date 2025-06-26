@@ -1,54 +1,57 @@
-# Python
+# Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
-*.pyo
-*.pyd
-*.env
-*.venv
+*$py.class
+
+# C extensions
+*.so
+
+# Virtual environment
+.venv/
 env/
 venv/
 ENV/
-env.bak/
-venv.bak/
 
-# pip cache
-pip-log.txt
-pip-delete-this-directory.txt
-
-# IDEs and Editors
+# VSCode settings
 .vscode/
-.idea/
-*.sublime-project
-*.sublime-workspace
 
-# Byte-compiled / optimized / DLL files
-*.so
-*.dylib
+# Mac OS
+.DS_Store
 
-# Distribution / packaging
+# Env files
+.env
+.env.*
+
+# Local development artifacts
+*.sqlite3
+*.db
+
+# PyInstaller
+*.manifest
+*.spec
+
+# Logs
+*.log
+
+# Jupyter Notebook Checkpoints
+.ipynb_checkpoints
+
+# Docker
+*.tar
+docker-compose.override.yml
+
+# Git
+.git/
+.gitignore
+
+# Build output
 build/
 dist/
 *.egg-info/
-.eggs/
 
-# FastAPI / Uvicorn logs
-*.log
+# Other IDEs
+.idea/
+*.iml
 
-# dotenv environment variables file
-.env
-
-# FAISS indexes — keep index.pkl but ignore everything else to avoid large unnecessary files
-faiss_index_krcl1/*
-!faiss_index_krcl1/index.pkl
-
-faiss_manual_krcl1/*
-!faiss_manual_krcl1/index.pkl
-
-# Docker related
-__pycache__/
-*.db
-*.sqlite3
-
-# Miscellaneous
-*.DS_Store
-*.swp
+# Cache
+.cache/
