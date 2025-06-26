@@ -4,21 +4,64 @@ from pydantic import BaseModel
 from langchain_community.llms import Ollama
 from langchain.agents import Tool, initialize_agent, AgentType
 from langchain_community.vectorstores import FAISS
-from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain_groq import ChatGroq
 from dotenv import load_dotenv
 from fastapi.middleware.cors import CORSMiddleware
 import os
+import requests
+from typing import List
 
 # Load environment variables
 load_dotenv()
+
+# Validate API keys
 groq_api_key = os.getenv("GROQ_API_KEY")
 if not groq_api_key:
     raise ValueError("GROQ_API_KEY not found in environment variables.")
 
-# Load Embeddings & Vector Databases
-embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
+hf_token = os.getenv("HUGGINGFACEHUB_API_TOKEN")
+if not hf_token:
+    raise ValueError("HUGGINGFACEHUB_API_TOKEN not found in environment variables.")
 
+# Define embedding class
+class HFHubEmbeddings:
+    def __init__(
+        self,
+        model_name: str = "sentence-transformers/all-MiniLM-L6-v2",
+        hf_token: str = None,
+    ):
+        self.model_name = model_name
+        self.api_url = f"https://api-inference.huggingface.co/pipeline/feature-extraction/{model_name}"
+        self.headers = {
+            "Authorization": f"Bearer {hf_token}"
+        }
+
+    def embed_query(self, text: str) -> List[float]:
+        response = requests.post(
+            self.api_url, headers=self.headers, json={"inputs": text}
+        )
+        if response.status_code != 200:
+            raise Exception(
+                f"HuggingFace API Error: {response.status_code} - {response.text}"
+            )
+
+        embedding = response.json()
+
+        # Mean pool if shape is [1 x seq_len x hidden]
+        if isinstance(embedding[0][0], list):
+            pooled = [sum(x) / len(x) for x in zip(*embedding[0])]
+            return pooled
+        else:
+            return embedding[0]
+
+    def embed_documents(self, texts: List[str]) -> List[List[float]]:
+        return [self.embed_query(text) for text in texts]
+
+# ✅ CORRECT: Pass token here
+embeddings = HFHubEmbeddings(
+    model_name="sentence-transformers/all-MiniLM-L6-v2",
+    hf_token=hf_token
+)
 # Allow dangerous deserialization only if you trust the source!
 db1 = FAISS.load_local("faiss_index_krcl1", embeddings, allow_dangerous_deserialization=True)
 db2 = FAISS.load_local("faiss_manual_krcl1", embeddings, allow_dangerous_deserialization=True)
