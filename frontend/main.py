@@ -19,7 +19,7 @@ st.markdown("Ask me about General & Subsidiary Rules or Accident Manual.")
 # User input
 query = st.text_input("Enter your question:")
 
-# 🔥 Correct endpoint!
+# Backend URL
 BACKEND_URL = "https://final-or88.onrender.com/ask"
 
 # Button
@@ -31,13 +31,17 @@ if st.button("Ask") and query:
                 data = response.json()
                 if "error" in data:
                     st.error(f"Backend error: {data['error']}")
-                else:
+                elif "answer" in data:
                     st.success("Answer received!")
-                    st.markdown(f"### 🤖 Answer:\n{data['final_answer']}")
+                    st.markdown(f"###  Answer:\n{data['answer']}")
+                    # Optional compatibility for agent-style responses
                     if data.get("action"):
-                        st.markdown(f"**🔍 Used Tool:** {data['action']}")
+                        st.markdown(f"** Used Tool:** {data['action']}")
                     if data.get("observation"):
-                        st.markdown(f"**📄 Retrieved:**\n{data['observation']}")
+                        st.markdown(f"** Retrieved:**\n{data['observation']}")
+                else:
+                    st.warning("Unexpected response format:")
+                    st.json(data)
             else:
                 st.error(f"Backend returned status {response.status_code}")
                 try:
