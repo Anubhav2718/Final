@@ -1,57 +1,40 @@
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
-*$py.class
-
-# C extensions
-*.so
-
-# Virtual environment
-.venv/
-env/
-venv/
-ENV/
+*.pyo
+*.pyd
+*.pyc
 
 # VSCode settings
 .vscode/
 
-# Mac OS
-.DS_Store
-
-# Env files
+# Environment variables
 .env
-.env.*
 
-# Local development artifacts
-*.sqlite3
-*.db
+kenv/
 
-# PyInstaller
-*.manifest
-*.spec
+# FAISS index and pickle files (if large or generated)
+#faiss_krcl_cohere/
+#faiss_manual_cohere/
+#*.faiss
+#*.pkl
 
-# Logs
-*.log
-
-# Jupyter Notebook Checkpoints
-.ipynb_checkpoints
+# Python virtual environments
+venv/
+env/
+.venv/
+.kenv/
 
 # Docker
 *.tar
-docker-compose.override.yml
+*.log
 
-# Git
-.git/
-.gitignore
+# System files
+.DS_Store
+Thumbs.db
 
-# Build output
-build/
-dist/
-*.egg-info/
+# PyInstaller
+*.spec
 
-# Other IDEs
-.idea/
-*.iml
-
-# Cache
-.cache/
+# Frontend node modules (if frontend is JS-based)
+frontend/node_modules/
